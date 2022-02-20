@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import firebase from 'firebase/app';
-
+import "firebase/storage";
 import 'firebase/analytics';
 import 'firebase/auth';
 import 'firebase/firestore';// TODO: Add SDKs for Firebase products that you want to use
@@ -11,6 +11,7 @@ import 'firebase/firestore';// TODO: Add SDKs for Firebase products that you wan
 const firebaseConfig = {
   apiKey: "AIzaSyB4Kr4DNPKBFZgoGAZaXitleaR2BZA-3QI",
   authDomain: "chat-app-f4356.firebaseapp.com",
+  databaseURL: "https://chat-app-f4356-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "chat-app-f4356",
   storageBucket: "chat-app-f4356.appspot.com",
   messagingSenderId: "919461873729",
@@ -24,11 +25,11 @@ firebase.analytics();
 
 const auth = firebase.auth();
 const db = firebase.firestore();
-
+const storage = firebase.storage();
 if (window.location.hostname === 'localhost') {
   // auth.useEmulator('http://localhost:9099');
   // db.useEmulator('localhost', '8080');
 }
 
-export { db, auth };
+export { db, auth,storage };
 export default firebase;

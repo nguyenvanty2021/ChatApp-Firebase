@@ -25,7 +25,7 @@ export default function UserInfo() {
         ...doc.data(),
         id: doc.id,
       }));
-     // console.log(data)
+     console.log(data)
     });
   }, []);
   useEffect(() => {

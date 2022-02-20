@@ -11,16 +11,13 @@ const useFireStore = (props) => {
     if (condition) {
       // condition:
       // {
-      //     fieldName: "abc",
+      //     fieldName: ["abc", "def"],
       //     operator: "==" or ">" or "<" or "array-contains" or "in" -> dùng in khi muốn xem giá trị abc có nằm trong 1 array không -> in là trong
-      //     compareValue: ["abc", "def"]
-      //     ----------
-      //     operator: "=="
-      //     compareValue: "abc"
+      //     compareValue: "abc",
       // }
       // collectionRef.where("name", "==", "Tung");
       if (condition?.compareValue && condition?.compareValue !== "") {
-          // lấy ra những obj nào có thành viên là: Alex Nguyễn nằm trong thuộc tính members
+          // lấy ra những obj nào trong array rooms có thành viên là: Alex Nguyễn nằm trong thuộc tính members
         collectionRef = collectionRef.where(
           condition?.fieldName,
           condition?.operator,

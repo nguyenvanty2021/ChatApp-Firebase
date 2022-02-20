@@ -2,58 +2,6 @@ import React, { useState } from "react";
 import { Form, Modal, Select, Spin, Avatar } from "antd";
 import { db } from "../../firebase/config";
 
-function DebounceSelect({
-  fetchOptions,
-  debounceTimeout = 300,
-  curMembers,
-  ...props
-}) {
-  // Search: abcddassdfasdf
-
-  const [fetching, setFetching] = useState(false);
-  const [options, setOptions] = useState([]);
-
-  const debounceFetcher = React.useMemo(() => {
-    const loadOptions = (value) => {
-      setOptions([]);
-      setFetching(true);
-
-      fetchOptions(value, curMembers).then((newOptions) => {
-        setOptions(newOptions);
-        setFetching(false);
-      });
-    };
-
-   // return debounce(loadOptions, debounceTimeout);
-  }, [debounceTimeout, fetchOptions, curMembers]);
-
-  React.useEffect(() => {
-    return () => {
-      // clear when unmount
-      setOptions([]);
-    };
-  }, []);
-
-  return (
-    <Select
-      labelInValue
-      filterOption={false}
-      onSearch={debounceFetcher}
-      notFoundContent={fetching ? <Spin size="small" /> : null}
-      {...props}
-    >
-      {options.map((opt) => (
-        <Select.Option key={opt.value} value={opt.value} title={opt.label}>
-          <Avatar size="small" src={opt.photoURL}>
-            {opt.photoURL ? "" : opt.label?.charAt(0)?.toUpperCase()}
-          </Avatar>
-          {` ${opt.label}`}
-        </Select.Option>
-      ))}
-    </Select>
-  );
-}
-
 async function fetchUserList(search, curMembers) {
   return db
     .collection("users")
@@ -72,62 +20,61 @@ async function fetchUserList(search, curMembers) {
     });
 }
 
-export default function InviteMemberModal() {
-//   const {
-//     isInviteMemberVisible,
-//     setIsInviteMemberVisible,
-//     selectedRoomId,
-//     selectedRoom,
-//   } = useContext(AppContext);
-  const [value, setValue] = useState([]);
-  const [form] = Form.useForm();
+export default function InviteMemberModal({ visible, handleModal }) {
+  const { Option } = Select;
+  //   const {
+  //     isInviteMemberVisible,
+  //     setIsInviteMemberVisible,
+  //     selectedRoomId,
+  //     selectedRoom,
+  //   } = useContext(AppContext);
 
-  const handleOk = () => {
-    // reset form value
-    form.resetFields();
-    setValue([]);
+  //   const handleOk = () => {
+  //     // reset form value
+  //     form.resetFields();
+  //     setValue([]);
 
-    // update members in current room
-  //  const roomRef = db.collection("rooms").doc(selectedRoomId);
+  //     // update members in current room
+  //   //  const roomRef = db.collection("rooms").doc(selectedRoomId);
 
-    // roomRef.update({
-    //   members: [...selectedRoom.members, ...value.map((val) => val.value)],
-    // });
+  //     // roomRef.update({
+  //     //   members: [...selectedRoom.members, ...value.map((val) => val.value)],
+  //     // });
 
- //   setIsInviteMemberVisible(false);
-  };
+  //  //   setIsInviteMemberVisible(false);
+  //   };
 
-  const handleCancel = () => {
-    // reset form value
-    form.resetFields();
-    setValue([]);
-
-   // setIsInviteMemberVisible(false);
-  };
+  function handleChange(value) {
+    console.log(`selected ${value}`);
+  }
 
   return (
     <div>
       <Modal
         title="Mời thêm thành viên"
-        visible={true}
-        onOk={handleOk}
-        onCancel={handleCancel}
+        visible={visible}
+        footer={null}
+        //    onOk={handleOk}
+        onCancel={() => handleModal(false)}
         destroyOnClose={true}
       >
-        <Form form={form} layout="vertical">
-          <DebounceSelect
-            mode="multiple"
-            name="search-user"
-            label="Tên các thành viên"
-            value={value}
-            placeholder="Nhập tên thành viên"
-            fetchOptions={fetchUserList}
-            onChange={(newValue) => setValue(newValue)}
-            style={{ width: "100%" }}
-            // curMembers={selectedRoom.members}
-            curMembers={[]}
-          />
-        </Form>
+        <Select
+          mode="multiple"
+          style={{ width: "100%" }}
+          placeholder="Select one member"
+          defaultValue={["china"]}
+          onChange={handleChange} 
+          optionLabelProp="label"
+        >
+          <Option value="china" label="China">
+            <div className="demo-option-label-item">
+              <span role="img" aria-label="China">
+                🇨🇳
+              </span>
+              China (中国)
+            </div>
+          </Option>
+        </Select>
       </Modal>
     </div>
   );
